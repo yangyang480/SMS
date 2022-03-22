@@ -8,10 +8,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
-
 import javax.persistence.TypedQuery;
 import java.util.List;
-import java.util.Set;
 
 public class StudentService implements StudentDAO {
 
@@ -28,10 +26,7 @@ public class StudentService implements StudentDAO {
         Query query = session.createQuery(hql);
         query.getResultList();
         List<Student> students = query.getResultList();
-        for (Student s : students)
-        {
-            System.out.println("Student email: " + s.getsEmail() + " Student name: " + s.getsName() + " Student password: " + s.getsPass());
-        }
+
         factory.close();
         session.close();
 
@@ -39,27 +34,24 @@ public class StudentService implements StudentDAO {
     }
 
     @Override
-    public Student getStudentByEmail(String sEmail) {
+    public Student getStudentByEmail(String sEmail)
+    {
         SessionFactory factory = new Configuration().configure().buildSessionFactory();
         Session session = factory.openSession();
-        String hql = "SELECT s FROM Student s WHERE s.sEmail = : email";
-        TypedQuery typedQuery = session.createQuery(hql);
-        typedQuery.setParameter("email", sEmail);
-        List<Student> students = typedQuery.getResultList();
-        for (Student s : students)
-        {
-            System.out.println("Student email: " + s.getsEmail() + " Student name: " + s.getsName() + " Student password: " + s.getsPass());
-        }
+
+        Student student = session.get(Student.class, sEmail); //get student by email
+
         factory.close();
         session.close();
 
-        return null;
+        return student;
     }
 
     @Override
     public Boolean validateStudent(String sEmail, String sPassword) {
         SessionFactory factory = new Configuration().configure().buildSessionFactory();
         Session session = factory.openSession();
+
         TypedQuery typedQuery = session.getNamedQuery("validatestudent");
         typedQuery.setParameter("email", sEmail);
         typedQuery.setParameter("password",sPassword);
@@ -81,12 +73,9 @@ public class StudentService implements StudentDAO {
         Transaction transaction = session.beginTransaction();
 
         Student student = session.get(Student.class, sEmail);
-        Set<Course> courses = student.getCourses();
-
+        List<Course> courses = student.getCourses();
         Course course = session.get(Course.class, cId);
         courses.add(course);
-        // TODO check if course exists already that a student may have. Otherwise delete comment
-
         student.setCourses(courses);
 
         transaction.commit();
@@ -95,26 +84,17 @@ public class StudentService implements StudentDAO {
     }
 
     @Override
-    public void getStudentCourses(String sEmail) {
+    public List<Course> getStudentCourses(String sEmail) {
         SessionFactory factory = new Configuration().configure().buildSessionFactory();
         Session session = factory.openSession();
 
         Student student = session.get(Student.class, sEmail);
-        Set<Course> courses = student.getCourses();
+        List<Course> courses = student.getCourses();
 
-        if (courses.size() > 0)
-        {
-            System.out.println("# COURSE NAME  INSTRUCTOR NAME");
-            for (Course c : courses)
-            {
-                System.out.println("Course ID: " + c.getcId() + " Course Name: " + c.getcName() + " Course Instructor: " + c.getcInstructorName());
-            }
-        }
-        else {
-            System.out.println("You have no course yet, please: ");
-        }
         factory.close();
         session.close();
+        return courses;
     }
+
 
 }

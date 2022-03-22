@@ -2,7 +2,6 @@ package jpa.dao;
 
 import jpa.entitymodels.Course;
 import jpa.entitymodels.Student;
-
 import java.util.List;
 
 public interface StudentDAO {
@@ -15,5 +14,5 @@ public interface StudentDAO {
 
     void registerStudentToCourse(String sEmail, int cId);
 
-    void getStudentCourses(String sEmail);
+    List<Course> getStudentCourses(String sEmail);
 }
