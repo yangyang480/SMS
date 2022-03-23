@@ -75,8 +75,12 @@ public class StudentService implements StudentDAO {
         Student student = session.get(Student.class, sEmail);
         List<Course> courses = student.getCourses();
         Course course = session.get(Course.class, cId);
-        courses.add(course);
-        student.setCourses(courses);
+        if (course == null) {
+            System.out.println("The course doesn't exist! ");
+        } else {
+            courses.add(course);
+            student.setCourses(courses);
+        }
 
         transaction.commit();
         factory.close();

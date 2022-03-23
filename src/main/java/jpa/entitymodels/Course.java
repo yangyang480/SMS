@@ -5,12 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table
 public class Course {
-    @Column(name = "id", unique = true, nullable = false)
     private int cId;
-    @Column(name = "name", length = 50, nullable = false)
     private String cName;
-    @Column(name = "Instructor", length = 50, nullable = false)
     private String cInstructorName;
     private List<Student> students;
 
@@ -29,6 +27,7 @@ public class Course {
     }
 
     @Id
+    @Column(unique = true, name = "id",  nullable = false)
     public int getcId() {
         return cId;
     }
@@ -37,6 +36,7 @@ public class Course {
         this.cId = cId;
     }
 
+    @Column(name = "name", length = 50, nullable = false)
     public String getcName() {
         return cName;
     }
@@ -45,6 +45,7 @@ public class Course {
         this.cName = cName;
     }
 
+    @Column(name = "Instructor", length = 50, nullable = false)
     public String getcInstructorName() {
         return cInstructorName;
     }

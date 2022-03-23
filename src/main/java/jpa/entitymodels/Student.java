@@ -5,15 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table
 @NamedQuery(name = "validatestudent", query = "SELECT s FROM Student s WHERE s.sEmail = :email AND s.sPass = :password")
-
 public class Student {
-    @Column(name = "email", unique = true, length = 50, nullable = false)
     private String sEmail;
-    @Column(name = "name", length = 50, nullable = false)
     private String sName;
-    @Column(name = "password", length = 50, nullable = false)
     private String sPass;
     private List<Course> courses;
 
@@ -39,6 +34,7 @@ public class Student {
     }
 
     @Id
+    @Column(name = "email", unique = true, length = 50, nullable = false)
     public String getsEmail() {
         return sEmail;
     }
@@ -47,6 +43,7 @@ public class Student {
         this.sEmail = sEmail;
     }
 
+    @Column(name = "name", length = 50, nullable = false)
     public String getsName() {
         return sName;
     }
@@ -55,6 +52,7 @@ public class Student {
         this.sName = sName;
     }
 
+    @Column(name = "password", length = 50, nullable = false)
     public String getsPass() {
         return sPass;
     }
@@ -65,8 +63,8 @@ public class Student {
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER) // We need EAGER to login otherwise will fail: 'LazyInitializationException: failed to lazily initialize a collection of role'
     @JoinTable(name = "student_course",
-            joinColumns = @JoinColumn(name = "student_email", referencedColumnName = "sEmail"),
-            inverseJoinColumns = @JoinColumn(name = "course_id", referencedColumnName = "cId"))
+            joinColumns = @JoinColumn(name = "student_email", referencedColumnName = "email"),
+            inverseJoinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"))
     public List<Course> getCourses() {
         return courses;
     }
